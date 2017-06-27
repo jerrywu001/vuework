@@ -5,6 +5,7 @@
   "author": "wuchao <wuchao@zqykj.com>",
   "private": true,
   "scripts": {
+    "db": "node server/lib/dataInit",
     "server": "node server/app.js",
     "dev": "node build/dev-server.js",
     "start": "node build/dev-server.js",
@@ -13,7 +14,11 @@
   },
   "dependencies": {
     "body-parser": "^1.17.2",
+    "cookie-parser": "^1.4.3",
     "cross-env": "^5.0.1",
+    "express-session": "^1.15.3",
+    "mongoose": "^4.11.0",
+    "sessionstore": "^1.2.18",
     "vue": "^2.3.3",
     "vue-router": "^2.3.1"
   },

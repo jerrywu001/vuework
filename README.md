@@ -1,11 +1,14 @@
 # vuework
-> A Vue.js project
+> A Vue.js&express project
 
 ## Build Setup
 
 ``` bash
 # install dependencies
 npm install
+
+# serve with express load at localhost:3000
+npm run server
 
 # serve with hot reload at localhost:8080
 npm run dev
