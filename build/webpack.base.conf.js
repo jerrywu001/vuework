@@ -22,20 +22,22 @@ module.exports = {
     extensions: ['.js', '.vue', '.json'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
-      '@': resolve('src')
+      '@': resolve('src'),
+	  'axios': resolve('src/assets/js/axios.min.js'),
+	  'underscore': resolve('src/assets/js/underscore.min.js')
     }
   },
   module: {
     rules: [
-      {
-        test: /\.(js|vue)$/,
-        loader: 'eslint-loader',
-        enforce: 'pre',
-        include: [resolve('src'), resolve('test')],
-        options: {
-          formatter: require('eslint-friendly-formatter')
-        }
-      },
+//      {
+//        test: /\.(js|vue)$/,
+//        loader: 'eslint-loader',
+//        enforce: 'pre',
+//        include: [resolve('src'), resolve('test')],
+//        options: {
+//          formatter: require('eslint-friendly-formatter')
+//        }
+//      },
       {
         test: /\.vue$/,
         loader: 'vue-loader',
