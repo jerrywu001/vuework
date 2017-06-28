@@ -1,13 +1,13 @@
 <template>
 	<div class="home">
 		<h1>Express</h1>
-		<ul class="loginStatus" ng-show="user">
-			<li>Welcome <b ng-bind="user"></b></li>
+		<ul class="loginStatus" v-if="username">
+			<li>Welcome <b>{{ username }}</b></li>
 			<li><router-link to="blogSend">发布博客</router-link></li>
 			<li><router-link to="user">修改资料</router-link></li>
-			<li><router-link to="logout">退出</router-link></li>
+			<li><a @click="logout">退出</a></li>
 		</ul>
-		<ul class="loginStatus" ng-hide="user">
+		<ul class="loginStatus" v-if="!username">
 			<li>Welcome!</li>
 			<li><router-link to="login">登录</router-link></li>
 			<li><router-link to="register">注册</router-link></li>
@@ -24,21 +24,42 @@
 </template>
 
 <script>
-	export default {
-		name: 'hello',
-		data() {
-			return {
-				msg: 'Welcome to Your Vue.js App'
-			};
-		}
-	};
+    export default {
+        name: 'home',
+        data() {
+            return {
+                username: ''
+            };
+        },
+        methods: {
+            logout() {
+                let _this = this;
+                axios.axios.get('/api/v1/logout').then(function(rsp) {
+                    if (rsp.status === 200 && rsp.data.success) {
+                        _this.username = '';
+                        _this.$router.push({
+                            path: '/login'
+                        });
+                    }
+                });
+            }
+        },
+        created() {
+            let _this = this;
+            axios.axios.get('/api/v1/login/check').then(function(rsp) {
+                if (rsp.status === 200 && rsp.data.success) {
+                    _this.username = rsp.data.username;
+                }
+            });
+        }
+    };
 
 </script>
 
 <style scoped>
-	.home {
-		width: 1000px;
-		margin: 20px auto 0 auto;
-	}
+    .home {
+        width: 1000px;
+        margin: 20px auto 0 auto;
+    }
 
 </style>

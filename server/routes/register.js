@@ -26,6 +26,8 @@ router.post('/register', function (req, res, next) {
                 });
                 user.save((err, row) => {
                     if (row && row.username) {
+                        req.session.user = uname;
+                        req.session.head = head;
                         res.json({
                             success: true,
                             msg: '注册成功！'

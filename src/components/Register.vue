@@ -1,39 +1,39 @@
 <template>
 	<div class="login">
-		<div class="alert alert-danger alert-dismissable hide">
-			<button aria-hidden="true" data-dismiss="alert" class="close" type="button">x</button>
-			<strong><i class="fa fa-times"></i>&nbsp;<b></b></strong>
+		<div v-show="msg" class="alert alert-danger alert-dismissable">
+			<button aria-hidden="true" data-dismiss="alert" class="close" type="button" @click="closeMsg">x</button>
+			<strong><i class="fa fa-times"></i>&nbsp;<b>{{ msg }}</b></strong>
 		</div>
 		<form class="form-horizontal" style="width: 800px;" name="regF">
 			<legend style="padding-bottom: 15px;">用户注册</legend>
 			<div class="form-group">
 				<label class="col-lg-2 control-label">用户名：</label>
 				<div class="col-lg-10">
-				<input type="text" class="form-control" id="username" ng-model="reg.username" autofocus autocomplete required/>
+				<input type="text" class="form-control" v-model="username" autofocus autocomplete required/>
 				<p class="help-block">你的账户名称，用于登录和显示。</p>
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-lg-2 control-label">口令：</label>
 				<div class="col-lg-10">
-				<input type="password" class="form-control" id="password" ng-model="reg.password" required>
+				<input type="password" class="form-control" v-model="password" required>
 				</div>
 			   </div>
 			   <div class="form-group">
 			  <label class="col-lg-2 control-label">重复输入口令：</label>
 			  <div class="col-lg-10">
-				  <input type="password" class="form-control" id="passwordRepeat" ng-model="reg.passwordRepeat" required>
+				  <input type="password" class="form-control" v-model="passwordRepeat" required>
 			  </div>
 			   </div>
 			   <div class="form-group">
 			  <label class="col-lg-2 control-label">自我描述：</label>
 			  <div class="col-lg-10">
-				  <textarea class="form-control" id="desc" ng-model="reg.desc" style="width: 662px;height: 150px;" required></textarea>
+				  <textarea class="form-control" v-model="message" style="width: 662px;height: 150px;" required></textarea>
 			  </div>
 			   </div>
 			   <div class="form-group">
 				<div class="col-lg-offset-2 col-lg-10">
-				<button class="btn btn-primary" type="button" ng-click="submit();" ng-disabled="regF.$invalid"><strong><i class="fa fa-check"></i>&nbsp;注册</strong></button>
+				<button class="btn btn-primary" type="button" @click="registerUser" :disabled="invalid"><strong><i class="fa fa-check"></i>&nbsp;注册</strong></button>
 				<button type="button" onclick="javascript:history.back();" class="btn btn-default">
 					<strong><i class="fa fa-arrow-left"></i>&nbsp;返回</strong>
 				</button>
@@ -45,11 +45,68 @@
 
 <script>
 	export default {
-		name: 'hello',
+		name: 'register',
 		data() {
 			return {
-				msg: 'Welcome to Your Vue.js App'
+                invalid: false,
+                username: '',
+                password: '',
+                passwordRepeat: '',
+                message: '',
+                msg: ''
 			};
+		},
+		methods: {
+            registerUser() {
+                console.log(axios);
+                let _this = this;
+                if (_this.invalid) {
+                    return false;
+                }
+                if (!_this.username) {
+                    _this.msg = '请输入用户名！';
+                    return false;
+                }
+                if (!_this.password) {
+                    _this.msg = '请输入密码！';
+                    return false;
+                }
+                if (!_this.passwordRepeat) {
+                    _this.msg = '请再次输入密码！';
+                    return false;
+                }
+                if (_this.password !== _this.passwordRepeat) {
+                    _this.msg = '两次输入密码不一致！';
+                    return false;
+                }
+                _this.invalid = true;
+                axios.axios.post('/api/v1/register', {
+                    username: _this.username,
+                    password: _this.password,
+                    message: _this.message
+                }).then(function(rsp) {
+                    _this.invalid = false;
+                    if (rsp.status === 200) {
+                        if (rsp.data.success) {
+                            _this.msg = '';
+                            _this.username = '';
+                            _this.password = '';
+                            _this.passwordRepeat = '';
+                            _this.message = '';
+                            _this.$router.push({
+                                path: '/'
+                            });
+                        } else {
+                            _this.msg = rsp.data.msg;
+                        }
+                    } else {
+                        _this.msg = '网络错误，请稍后再试！';
+                    }
+                });
+            },
+            closeMsg() {
+                this.msg = '';
+            }
 		}
 	};
 
