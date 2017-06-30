@@ -34,75 +34,78 @@
 </template>
 
 <script>
-    export default {
-        name: 'login',
-        data() {
-            return {
-                invalid: false,
-                username: '',
-                password: '',
-                msg: ''
-            };
-        },
-        methods: {
-            login() {
-                console.log(axios);
-                let _this = this;
-                if (_this.invalid) {
-                    return false;
-                }
-                if (!_this.username) {
-                    _this.msg = '请输入用户名！';
-                    return false;
-                }
-                if (!_this.password) {
-                    _this.msg = '请输入密码！';
-                    return false;
-                }
-                _this.invalid = true;
-                axios.axios.post('/api/v1/login', {
-                    username: _this.username,
-                    password: _this.password
-                }).then(function(rsp) {
-                    _this.invalid = false;
-                    if (rsp.status === 200) {
-                        if (rsp.data.success) {
-                            _this.msg = '';
-                            _this.username = '';
-                            _this.password = '';
-                            _this.$router.push({
-                                path: '/'
-                            });
-                        } else {
-                            _this.msg = rsp.data.msg;
-                        }
-                    } else {
-                        _this.msg = '网络错误，请稍后再试！';
-                    }
-                });
-            },
-            closeMsg() {
-                this.msg = '';
-            }
-        },
-        mounted() {
-            let _this = this;
-            axios.axios.get('/api/v1/login/check').then(function(rsp) {
-                if (rsp.status === 200 && rsp.data.success) {
-                    _this.$router.push({
-                        path: '/'
-                    });
-                }
-            });
-        }
-    };
+	export default {
+		name: 'login',
+		data() {
+			return {
+				invalid: false,
+				username: '',
+				password: '',
+				msg: ''
+			};
+		},
+		methods: {
+			login() {
+				console.log(axios);
+				let _this = this;
+				let query = this.$route.query;
+                let next_url = query && query.next_url ? query.next_url : '/';
+				
+				if (_this.invalid) {
+					return false;
+				}
+				if (!_this.username) {
+					_this.msg = '请输入用户名！';
+					return false;
+				}
+				if (!_this.password) {
+					_this.msg = '请输入密码！';
+					return false;
+				}
+				_this.invalid = true;
+				axios.axios.post('/api/v1/login', {
+					username: _this.username,
+					password: _this.password
+				}).then(function(rsp) {
+					_this.invalid = false;
+					if (rsp.status === 200) {
+						if (rsp.data.success) {
+							_this.msg = '';
+							_this.username = '';
+							_this.password = '';
+							_this.$router.push({
+								path: decodeURIComponent(next_url)
+							});
+						} else {
+							_this.msg = rsp.data.msg;
+						}
+					} else {
+						_this.msg = '网络错误，请稍后再试！';
+					}
+				});
+			},
+			closeMsg() {
+				this.msg = '';
+			}
+		},
+		created() {
+			let _this = this;			
+			axios.axios.get('/api/v1/login/check').then(function(rsp) {
+				if (rsp.status === 200 && rsp.data.success) {
+					_this.$router.push({
+						path: '/'
+					});
+				}
+			});
+		}
+	};
 
 </script>
 
 <style scoped>
-    .login {
-        width: 600px;
-        margin: 20px auto 0 auto;
-    }
+	.login {
+		width: 600px;
+		margin: 20px auto 0 auto;
+	}
 
 </style>

@@ -8,14 +8,13 @@ router.post('/login', function (req, res, next) {
     var pwd = data.password;
 
     if (uname !== undefined && pwd !== undefined) {
-        User.find({
+        User.findOne({
             username: uname,
             password: pwd
-        }, (err, rows) => {
-            console.log(err, rows);
-            if (rows && rows.length) {
+        }, (err, doc) => {
+            if (doc && Object.keys(doc).length) {
                 req.session.user = uname;
-                req.session.head = rows[0].head;
+                req.session.head = doc.head;
                 res.json({
                     success: true,
                     msg: '登录成功！'

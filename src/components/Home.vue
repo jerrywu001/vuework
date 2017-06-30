@@ -5,7 +5,7 @@
 			<li>Welcome <b>{{ username }}</b></li>
 			<li><router-link to="blogSend">发布博客</router-link></li>
 			<li><router-link to="user">修改资料</router-link></li>
-			<li><a @click="logout">退出</a></li>
+			<li><a href="javascript:;" @click="logout">退出</a></li>
 		</ul>
 		<ul class="loginStatus" v-if="!username">
 			<li>Welcome!</li>
