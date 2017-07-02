@@ -1,16 +1,40 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.1.0/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.3.0/animate.min.css" />
-    <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
-    <script src="//cdn.bootcss.com/webuploader/0.1.1/webuploader.min.js"></script>
-    <title>vuework</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-  </body>
+
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.1.0/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.3.0/animate.min.css" />
+	<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+	<script src="//cdn.bootcss.com/labjs/2.0.3/LAB.min.js"></script>
+	<script src="//cdn.bootcss.com/webuploader/0.1.1/webuploader.min.js"></script>
+	<title>vueblog with express server</title>
+</head>
+
+<body>
+	<div class="tips" id="tips"></div>
+	<div id="app"></div>
+	<script type="text/javascript">
+		var getRootPath = function() {
+			//获取当前网址，如： http://localhost:8083/uimcardprj/share/meun.jsp
+			var curWwwPath = window.document.location.href;
+			//获取主机地址之后的目录，如： uimcardprj/share/meun.jsp
+			var pathName = window.document.location.pathname;
+			var pos = curWwwPath.indexOf(pathName);
+			//获取主机地址，如： http://localhost:8083
+			var localhostPaht = curWwwPath.substring(0, pos);
+			if (pos === 5) localhostPaht = curWwwPath;
+			if (localhostPaht.indexOf("file") != -1) {
+				return ".";
+			}
+			//获取带"/"的项目名，如：/uimcardprj
+			var projectName = pathName.substring(0, pathName.substr(1).indexOf('/') + 1);
+			return (localhostPaht + projectName);
+		};
+
+	</script>
+	<!-- built files will be auto injected -->
+</body>
+
 </html>

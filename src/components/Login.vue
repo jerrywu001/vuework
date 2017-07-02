@@ -1,9 +1,5 @@
 <template>
 	<div class="login">
-		<div v-show="msg" class="alert alert-danger alert-dismissable">
-			<button aria-hidden="true" data-dismiss="alert" class="close" type="button" @click="closeMsg">x</button>
-			<strong><i class="fa fa-times"></i>&nbsp;<b>{{ msg }}</b></strong>
-		</div>
 		<form class="form-horizontal" style="width: 600px;" name="loginF">
 			<legend style="padding-bottom: 15px;">用户登录</legend>
 			<div class="form-group">
@@ -40,8 +36,7 @@
 			return {
 				invalid: false,
 				username: '',
-				password: '',
-				msg: ''
+				password: ''
 			};
 		},
 		methods: {
@@ -49,24 +44,26 @@
 				console.log(axios);
 				let _this = this;
 				let query = this.$route.query;
-                let next_url = query && query.next_url ? query.next_url : '/';
-				
+				let next_url = query && query.next_url ? query.next_url : '/';
+
 				if (_this.invalid) {
 					return false;
 				}
 				if (!_this.username) {
-					_this.msg = '请输入用户名！';
+					_this.autoError($('#tips'), '请输入用户名！');
 					return false;
 				}
 				if (!_this.password) {
-					_this.msg = '请输入密码！';
+					_this.autoError($('#tips'), '请输入密码！');
 					return false;
 				}
 				_this.invalid = true;
+				_this.showLoding();
 				axios.axios.post('/api/v1/login', {
 					username: _this.username,
 					password: _this.password
 				}).then(function(rsp) {
+					_this.hideLoding();
 					_this.invalid = false;
 					if (rsp.status === 200) {
 						if (rsp.data.success) {
@@ -77,19 +74,16 @@
 								path: decodeURIComponent(next_url)
 							});
 						} else {
-							_this.msg = rsp.data.msg;
+							_this.autoError($('#tips'), rsp.data.msg);
 						}
 					} else {
-						_this.msg = '网络错误，请稍后再试！';
+						_this.autoError($('#tips'), '网络错误，请稍后再试！');
 					}
 				});
-			},
-			closeMsg() {
-				this.msg = '';
 			}
 		},
 		created() {
-			let _this = this;			
+			let _this = this;
 			axios.axios.get('/api/v1/login/check').then(function(rsp) {
 				if (rsp.status === 200 && rsp.data.success) {
 					_this.$router.push({
